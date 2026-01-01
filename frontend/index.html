@@ -3,21 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plan Your Perfect Trip</title>
+  <title>AI L&D Planner</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body class="bg-neutral-50 text-neutral-900 antialiased font-[Inter]">
   <!-- Nav -->
   <header class="border-b border-neutral-200 bg-white/80 backdrop-blur">
     <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-600 text-white">
-          <i data-lucide="compass" class="h-5 w-5"></i>
+          <i data-lucide="graduation-cap" class="h-5 w-5"></i>
         </span>
-        <span class="text-lg font-semibold tracking-tight">Trip Planner</span>
+        <span class="text-lg font-semibold tracking-tight">AI L&amp;D Planner</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 text-sm text-neutral-600">
+        <i data-lucide="shield-check" class="h-4 w-4"></i>
+        <span>Private • Local run</span>
       </div>
     </div>
   </header>
@@ -26,38 +31,41 @@
   <section class="mx-auto max-w-7xl px-6 pt-10 pb-8">
     <div class="relative overflow-hidden rounded-2xl border border-neutral-200 bg-gradient-to-tr from-indigo-600 via-violet-600 to-fuchsia-600">
       <div class="absolute inset-0 opacity-20">
-        <img alt="Mountain landscape" class="h-full w-full object-cover"
-             src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop" />
+        <img alt="Abstract learning background" class="h-full w-full object-cover"
+             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2000&auto=format&fit=crop" />
       </div>
+
       <div class="relative grid gap-6 p-8 md:grid-cols-3 md:p-12">
         <div class="md:col-span-2">
           <h1 class="text-white text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
-            Plan Your Perfect Trip
+            Build Your Perfect Learning Plan
           </h1>
           <p class="mt-3 text-indigo-100/90 text-base md:text-lg">
-            Discover destinations, craft smart budgets, and get a personalized day-by-day itinerary in seconds.
+            Let our AI agents identify skill gaps, propose a cornerstone project, and generate a learning + execution plan.
           </p>
+
           <div class="mt-6 flex flex-wrap items-center gap-3">
             <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-white text-sm">
-              <i data-lucide="clock-8" class="h-4 w-4"></i>
-              Plan faster
+              <i data-lucide="scan-search" class="h-4 w-4"></i>
+              Skill gap scan
             </div>
             <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-white text-sm">
-              <i data-lucide="map" class="h-4 w-4"></i>
-              Smarter routes
+              <i data-lucide="hammer" class="h-4 w-4"></i>
+              Cornerstone project
             </div>
             <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 text-white text-sm">
-              <i data-lucide="sparkles" class="h-4 w-4"></i>
-              Local gems
+              <i data-lucide="check-circle-2" class="h-4 w-4"></i>
+              Weekly execution plan
             </div>
           </div>
         </div>
+
         <div class="hidden md:block">
           <div class="relative h-full w-full rounded-xl bg-white/10 p-4 ring-1 ring-white/20 backdrop-blur">
-            <img alt="City minimal render" class="h-full w-full rounded-lg object-cover"
-                 src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=1600&auto=format&fit=crop" />
+            <img alt="Work desk" class="h-full w-full rounded-lg object-cover"
+                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop" />
             <div class="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/30 px-3 py-1.5 text-white text-xs">
-              <i data-lucide="camera" class="h-3.5 w-3.5"></i> Inspiration
+              <i data-lucide="sparkles" class="h-3.5 w-3.5"></i> Build-proof, not theory
             </div>
           </div>
         </div>
@@ -69,44 +77,47 @@
       <div class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
         <div class="flex items-center gap-3">
           <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700">
-            <i data-lucide="search" class="h-5 w-5"></i>
+            <i data-lucide="scan-search" class="h-5 w-5"></i>
           </span>
           <div>
-            <div class="font-semibold tracking-tight">Research</div>
-            <p class="text-sm text-neutral-600">Weather, highlights, neighborhoods.</p>
+            <div class="font-semibold tracking-tight">Skill Gaps</div>
+            <p class="text-sm text-neutral-600">What to learn, and why it matters.</p>
           </div>
         </div>
       </div>
+
       <div class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
         <div class="flex items-center gap-3">
           <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700">
-            <i data-lucide="calendar-clock" class="h-5 w-5"></i>
+            <i data-lucide="hammer" class="h-5 w-5"></i>
           </span>
           <div>
-            <div class="font-semibold tracking-tight">Itineraries</div>
-            <p class="text-sm text-neutral-600">Day-by-day schedules, in minutes.</p>
+            <div class="font-semibold tracking-tight">Cornerstone Project</div>
+            <p class="text-sm text-neutral-600">A build that proves capability.</p>
           </div>
         </div>
       </div>
+
       <div class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
         <div class="flex items-center gap-3">
           <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700">
-            <i data-lucide="wallet" class="h-5 w-5"></i>
+            <i data-lucide="book-open" class="h-5 w-5"></i>
           </span>
           <div>
-            <div class="font-semibold tracking-tight">Budget</div>
-            <p class="text-sm text-neutral-600">Smart spend suggestions.</p>
+            <div class="font-semibold tracking-tight">Learning Plan</div>
+            <p class="text-sm text-neutral-600">Resources + sequence + outcomes.</p>
           </div>
         </div>
       </div>
+
       <div class="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
         <div class="flex items-center gap-3">
           <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-100 text-neutral-700">
-            <i data-lucide="map-pin" class="h-5 w-5"></i>
+            <i data-lucide="clipboard-check" class="h-5 w-5"></i>
           </span>
           <div>
-            <div class="font-semibold tracking-tight">Local</div>
-            <p class="text-sm text-neutral-600">Authentic finds & hidden gems.</p>
+            <div class="font-semibold tracking-tight">Execution Plan</div>
+            <p class="text-sm text-neutral-600">Week-by-week actions + checkpoints.</p>
           </div>
         </div>
       </div>
@@ -118,74 +129,75 @@
     <div class="grid gap-6 lg:grid-cols-3">
       <!-- Form -->
       <section class="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <h2 class="text-2xl font-semibold tracking-tight">Plan Your Trip</h2>
-        <p class="mt-1 text-sm text-neutral-600">Enter a destination, number of days, budget, and interests.</p>
+        <h2 class="text-2xl font-semibold tracking-tight">Plan Your Learning</h2>
+        <p class="mt-0.5 text-sm text-neutral-600">Enter your target and constraints. The plan will appear on the right.</p>
 
-        <form id="plannerForm" class="mt-6 space-y-4" autocomplete="off">
-          <!-- Destination -->
+        <form id="plannerForm" class="mt-5 space-y-3" autocomplete="off">
+          <!-- Target -->
           <div>
-            <label for="destination" class="block text-sm font-medium text-neutral-800">Destination</label>
-            <div class="mt-2 relative">
-              <input id="destination" type="text" required placeholder="e.g., Kyoto, Japan"
-                     class="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-neutral-900 placeholder-neutral-400 shadow-sm outline-none ring-0 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200" />
+            <label for="destination" class="block text-sm font-medium text-neutral-800">Target skill / role</label>
+            <div class="mt-1.5 relative">
+              <input id="destination" type="text" required placeholder="e.g., AI PM (L5), Agentic app builder"
+                     class="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-neutral-900 placeholder-neutral-400 shadow-sm outline-none ring-0 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200" />
               <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
-                <i data-lucide="map-pin" class="h-4.5 w-4.5"></i>
+                <i data-lucide="target" class="h-4.5 w-4.5"></i>
               </span>
             </div>
           </div>
 
-          <!-- Duration -->
+          <!-- Time horizon -->
           <div>
-            <label for="duration" class="block text-sm font-medium text-neutral-800">Duration (days)</label>
-            <div class="mt-2 relative">
-              <input id="duration" type="number" inputmode="numeric" min="1" max="30" step="1" required placeholder="e.g., 5"
-                     class="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-neutral-900 placeholder-neutral-400 shadow-sm outline-none ring-0 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200" />
+            <label for="duration" class="block text-sm font-medium text-neutral-800">Time horizon (weeks)</label>
+            <div class="mt-1.5 relative">
+              <input id="duration" type="number" inputmode="numeric" min="1" max="26" step="1" required placeholder="e.g., 4"
+                     class="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-neutral-900 placeholder-neutral-400 shadow-sm outline-none ring-0 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200" />
               <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
                 <i data-lucide="calendar" class="h-4.5 w-4.5"></i>
               </span>
             </div>
           </div>
 
-          <!-- Budget (custom select) -->
+          <!-- Weekly hours (reusing budget select to avoid backend break) -->
           <div class="relative">
-            <label class="block text-sm font-medium text-neutral-800">Budget</label>
+            <label class="block text-sm font-medium text-neutral-800">Weekly hours</label>
             <input id="budgetValue" type="hidden" value="moderate" />
             <button id="budgetBtn" type="button"
-                    class="mt-2 w-full inline-flex items-center justify-between rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-left text-neutral-900 shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-200">
-              <span id="budgetLabel">Moderate</span>
+                    class="mt-1.5 w-full inline-flex items-center justify-between rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-left text-neutral-900 shadow-sm hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-200">
+              <span id="budgetLabel">6–8 hrs/week</span>
               <i data-lucide="chevron-down" class="h-4.5 w-4.5 text-neutral-500"></i>
             </button>
+
             <div id="budgetMenu" class="absolute z-20 mt-2 hidden w-full overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-lg">
-              <button data-value="budget" class="flex w-full items-center justify-between px-3.5 py-2.5 text-sm hover:bg-neutral-50">
+              <button data-value="budget" class="flex w-full items-center justify-between px-3.5 py-2 text-sm hover:bg-neutral-50">
                 <span class="flex items-center gap-2">
-                  <i data-lucide="piggy-bank" class="h-4 w-4 text-neutral-500"></i>
-                  Budget
+                  <i data-lucide="battery-low" class="h-4 w-4 text-neutral-500"></i>
+                  3–5 hrs/week
                 </span>
-                <span class="text-neutral-500 text-xs">Save more</span>
+                <span class="text-neutral-500 text-xs">light</span>
               </button>
-              <button data-value="moderate" class="flex w-full items-center justify-between px-3.5 py-2.5 text-sm hover:bg-neutral-50">
+              <button data-value="moderate" class="flex w-full items-center justify-between px-3.5 py-2 text-sm hover:bg-neutral-50">
                 <span class="flex items-center gap-2">
-                  <i data-lucide="wallet" class="h-4 w-4 text-neutral-500"></i>
-                  Moderate
+                  <i data-lucide="battery-medium" class="h-4 w-4 text-neutral-500"></i>
+                  6–8 hrs/week
                 </span>
-                <span class="text-neutral-500 text-xs">Balanced</span>
+                <span class="text-neutral-500 text-xs">steady</span>
               </button>
-              <button data-value="luxury" class="flex w-full items-center justify-between px-3.5 py-2.5 text-sm hover:bg-neutral-50">
+              <button data-value="luxury" class="flex w-full items-center justify-between px-3.5 py-2 text-sm hover:bg-neutral-50">
                 <span class="flex items-center gap-2">
-                  <i data-lucide="gem" class="h-4 w-4 text-neutral-500"></i>
-                  Luxury
+                  <i data-lucide="battery-full" class="h-4 w-4 text-neutral-500"></i>
+                  10–15 hrs/week
                 </span>
-                <span class="text-neutral-500 text-xs">Premium</span>
+                <span class="text-neutral-500 text-xs">intense</span>
               </button>
             </div>
           </div>
 
-          <!-- Interests -->
+          <!-- Strengths / context -->
           <div>
-            <label for="interests" class="block text-sm font-medium text-neutral-800">Interests</label>
-            <div class="mt-2 relative">
-              <input id="interests" type="text" placeholder="e.g., food, culture, museums, nightlife"
-                     class="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-neutral-900 placeholder-neutral-400 shadow-sm outline-none ring-0 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200" />
+            <label for="interests" class="block text-sm font-medium text-neutral-800">Current strengths (optional)</label>
+            <div class="mt-1.5 relative">
+              <input id="interests" type="text" placeholder="e.g., Growth, SQL, GTM"
+                     class="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-neutral-900 placeholder-neutral-400 shadow-sm outline-none ring-0 focus:border-neutral-400 focus:ring-2 focus:ring-neutral-200" />
               <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">
                 <i data-lucide="sparkles" class="h-4.5 w-4.5"></i>
               </span>
@@ -193,42 +205,55 @@
           </div>
 
           <!-- Submit -->
-          <div class="pt-2">
+          <div class="pt-1">
             <button type="submit"
-                    class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-3 text-white shadow-sm transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-300">
-              <i data-lucide="route" class="h-5 w-5"></i>
-              <span class="font-medium">Plan My Trip</span>
+                    class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-2.5 text-white shadow-sm transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-300">
+              <i data-lucide="wand-2" class="h-5 w-5"></i>
+              <span class="font-medium">Generate Plan</span>
             </button>
           </div>
         </form>
+
+        <div class="mt-6 rounded-lg border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-700">
+          <div class="flex items-start gap-2">
+            <i data-lucide="info" class="h-4 w-4 mt-0.5 text-neutral-500"></i>
+            <div>
+              <div class="font-medium">Tip</div>
+              <div class="text-neutral-600 mt-0.5">
+                Keep the target specific (role + level or a clear capability). You’ll get a better cornerstone project.
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Output -->
       <section class="lg:col-span-2 space-y-6">
         <div id="placeholderCard" class="rounded-xl border border-neutral-200 bg-white p-8 text-center shadow-sm">
-          <h3 class="text-xl md:text-2xl font-semibold tracking-tight">Fill out the form to get your personalized trip plan</h3>
-          <p class="mt-2 text-neutral-600">Enter your details on the left—your itinerary will appear here.</p>
+          <h3 class="text-xl md:text-2xl font-semibold tracking-tight">Fill out the form to get your learning plan</h3>
+          <p class="mt-2 text-neutral-600">Enter your target on the left. Your plan will appear here.</p>
+
           <div class="mt-6 grid gap-3 sm:grid-cols-3">
             <div class="rounded-lg border border-neutral-200 p-4">
               <div class="flex items-center gap-2 text-neutral-700">
-                <i data-lucide="sunrise" class="h-4 w-4"></i>
-                Morning ideas
+                <i data-lucide="scan-search" class="h-4 w-4"></i>
+                Skill gaps
               </div>
-              <p class="mt-1 text-sm text-neutral-600">Neighborhood walk, cafe, must-see spot.</p>
+              <p class="mt-1 text-sm text-neutral-600">What’s missing, what to prioritize, what to skip.</p>
             </div>
             <div class="rounded-lg border border-neutral-200 p-4">
               <div class="flex items-center gap-2 text-neutral-700">
-                <i data-lucide="utensils" class="h-4 w-4"></i>
-                Food moments
+                <i data-lucide="hammer" class="h-4 w-4"></i>
+                Project plan
               </div>
-              <p class="mt-1 text-sm text-neutral-600">Street food to chef-led tastings.</p>
+              <p class="mt-1 text-sm text-neutral-600">A build that produces portfolio artifacts.</p>
             </div>
             <div class="rounded-lg border border-neutral-200 p-4">
               <div class="flex items-center gap-2 text-neutral-700">
-                <i data-lucide="moon" class="h-4 w-4"></i>
-                Evenings
+                <i data-lucide="clipboard-check" class="h-4 w-4"></i>
+                Execution
               </div>
-              <p class="mt-1 text-sm text-neutral-600">Sunsets, shows, speakeasies.</p>
+              <p class="mt-1 text-sm text-neutral-600">Weekly tasks, checkpoints, and review loop.</p>
             </div>
           </div>
         </div>
@@ -243,9 +268,9 @@
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-2">
           <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-neutral-900 text-white">
-            <i data-lucide="compass" class="h-4.5 w-4.5"></i>
+            <i data-lucide="graduation-cap" class="h-4.5 w-4.5"></i>
           </span>
-          <span>&copy; <span id="year"></span> Trip Planner</span>
+          <span>&copy; <span id="year"></span> AI L&amp;D Planner</span>
         </div>
         <div class="flex items-center gap-4">
           <a class="hover:text-neutral-900" href="#">Privacy</a>
@@ -263,7 +288,7 @@
     document.getElementById('year').textContent = new Date().getFullYear();
     renderIcons();
 
-    // Custom budget select
+    // Custom select (reusing "budget" field to avoid backend changes for now)
     const budgetBtn = document.getElementById('budgetBtn');
     const budgetMenu = document.getElementById('budgetMenu');
     const budgetLabel = document.getElementById('budgetLabel');
@@ -277,6 +302,8 @@
       btn.addEventListener('click', () => {
         const val = btn.getAttribute('data-value');
         budgetValue.value = val;
+
+        // Use the visible label text (first line)
         budgetLabel.textContent = btn.innerText.trim().split('\n')[0];
         budgetMenu.classList.add('hidden');
       });
@@ -293,17 +320,33 @@
     const results = document.getElementById('results');
     const placeholderCard = document.getElementById('placeholderCard');
 
+    function mapWeeksToDurationString(weeksNum) {
+      const n = Math.max(1, Math.min(26, parseInt(weeksNum || '0', 10)));
+      return isFinite(n) ? `${n} weeks` : '4 weeks';
+    }
+
+    function mapWeeklyHoursToBudgetToken(token) {
+      // Backend currently expects "budget" values. Keep them.
+      // We'll convert these to meaningful words inside the L&D prompt later.
+      if (token === 'budget') return '3-5 hrs/week';
+      if (token === 'luxury') return '10-15 hrs/week';
+      return '6-8 hrs/week';
+    }
+
     async function submitToBackend(e) {
       e.preventDefault();
 
-      const destination = (document.getElementById('destination').value || '').trim();
-      const durationNum = Math.max(1, Math.min(30, parseInt(document.getElementById('duration').value || '0', 10)));
-      const duration = isFinite(durationNum) ? `${durationNum} days` : '3 days';
-      const budget = document.getElementById('budgetValue').value || 'moderate';
-      const interests = (document.getElementById('interests').value || '').trim();
+      const target = (document.getElementById('destination').value || '').trim();
+      const weeksNum = Math.max(1, Math.min(26, parseInt(document.getElementById('duration').value || '0', 10)));
+      const duration = mapWeeksToDurationString(weeksNum);
 
-      if (!destination || !durationNum) {
-        alert('Please enter a destination and duration.');
+      const weeklyHoursToken = document.getElementById('budgetValue').value || 'moderate';
+      const weeklyHours = mapWeeklyHoursToBudgetToken(weeklyHoursToken);
+
+      const strengths = (document.getElementById('interests').value || '').trim();
+
+      if (!target || !weeksNum) {
+        alert('Please enter a target and time horizon.');
         return;
       }
 
@@ -313,31 +356,55 @@
         <div class="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
           <div class="flex items-center gap-3 text-neutral-700">
             <i data-lucide="loader-2" class="h-5 w-5 animate-spin"></i>
-            Planning your itinerary...
+            Building your learning plan...
           </div>
         </div>
       `;
       renderIcons();
 
       try {
+        // IMPORTANT: Keep request keys unchanged for now to avoid backend edits.
+        // destination -> target skill/role
+        // duration -> weeks
+        // budget -> weekly hours
+        // interests -> current strengths/context
         const resp = await fetch('/plan-trip', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ destination, duration, budget, interests })
+          body: JSON.stringify({
+            destination: target,
+            duration: duration,
+            budget: weeklyHours,
+            interests: strengths
+          })
         });
 
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
         const md = (data && data.result) ? data.result : 'No result';
 
-        const content = (window.marked && window.marked.parse) ? window.marked.parse(md) : `<pre class="whitespace-pre-wrap">${md}</pre>`;
+        const content = (window.marked && window.marked.parse)
+          ? window.marked.parse(md)
+          : `<pre class="whitespace-pre-wrap">${md}</pre>`;
+
         results.innerHTML = `
           <div class="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div class="mb-3 flex items-center justify-between">
-              <h3 class="text-xl font-semibold tracking-tight">Your Itinerary</h3>
-              <button id="printBtn" class="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm hover:bg-neutral-50">
-                <i data-lucide="printer" class="h-4 w-4"></i> Print / PDF
-              </button>
+            <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 class="text-xl font-semibold tracking-tight">Your Learning Plan</h3>
+                <p class="text-sm text-neutral-600">
+                  Target: <span class="font-medium text-neutral-800">${escapeHtml(target)}</span>
+                  <span class="mx-2 text-neutral-300">•</span>
+                  Horizon: <span class="font-medium text-neutral-800">${escapeHtml(duration)}</span>
+                  <span class="mx-2 text-neutral-300">•</span>
+                  Time: <span class="font-medium text-neutral-800">${escapeHtml(weeklyHours)}</span>
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="printBtn" class="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm hover:bg-neutral-50">
+                  <i data-lucide="printer" class="h-4 w-4"></i> Print / PDF
+                </button>
+              </div>
             </div>
             <div class="prose max-w-none">${content}</div>
           </div>
@@ -350,13 +417,22 @@
           <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700">
             <div class="flex items-center gap-2">
               <i data-lucide="alert-triangle" class="h-5 w-5"></i>
-              <span>Failed to plan trip. Please try again.</span>
+              <span>Failed to generate plan. Please try again.</span>
             </div>
           </div>
         `;
         renderIcons();
         console.error('Plan error:', err);
       }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
     }
 
     form.addEventListener('submit', submitToBackend);

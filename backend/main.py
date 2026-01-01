@@ -1,15 +1,17 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
 import os
 import time
 import json
 from datetime import datetime
 from pathlib import Path
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+from typing import Optional, List, Dict, Any
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
+
+from dotenv import load_dotenv
+load_dotenv()
 
 # Minimal observability via Arize/OpenInference (optional)
 try:
