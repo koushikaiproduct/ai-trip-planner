@@ -283,73 +283,120 @@
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    // Initialize icons and year
-    function renderIcons() { if (window.lucide) lucide.createIcons(); }
+    // ----------------------------
+    // Init
+    // ----------------------------
+    function renderIcons() {
+      if (window.lucide) lucide.createIcons();
+    }
     document.getElementById('year').textContent = new Date().getFullYear();
     renderIcons();
-
-    // Custom select (reusing "budget" field to avoid backend changes for now)
+  
+    // ----------------------------
+    // Custom select (weekly hours via "budget")
+    // ----------------------------
     const budgetBtn = document.getElementById('budgetBtn');
     const budgetMenu = document.getElementById('budgetMenu');
     const budgetLabel = document.getElementById('budgetLabel');
     const budgetValue = document.getElementById('budgetValue');
-
+  
     budgetBtn.addEventListener('click', () => {
       budgetMenu.classList.toggle('hidden');
     });
-
+  
     budgetMenu.querySelectorAll('button[data-value]').forEach(btn => {
       btn.addEventListener('click', () => {
         const val = btn.getAttribute('data-value');
         budgetValue.value = val;
-
-        // Use the visible label text (first line)
         budgetLabel.textContent = btn.innerText.trim().split('\n')[0];
         budgetMenu.classList.add('hidden');
       });
     });
-
+  
     document.addEventListener('click', (e) => {
       if (!budgetBtn.contains(e.target) && !budgetMenu.contains(e.target)) {
         budgetMenu.classList.add('hidden');
       }
     });
-
-    // Planner logic (calls backend)
+  
+    // ----------------------------
+    // DOM refs
+    // ----------------------------
     const form = document.getElementById('plannerForm');
     const results = document.getElementById('results');
     const placeholderCard = document.getElementById('placeholderCard');
-
+  
+    // ----------------------------
+    // Helpers
+    // ----------------------------
     function mapWeeksToDurationString(weeksNum) {
       const n = Math.max(1, Math.min(26, parseInt(weeksNum || '0', 10)));
       return isFinite(n) ? `${n} weeks` : '4 weeks';
     }
-
+  
     function mapWeeklyHoursToBudgetToken(token) {
-      // Backend currently expects "budget" values. Keep them.
-      // We'll convert these to meaningful words inside the L&D prompt later.
-      if (token === 'budget') return '3-5 hrs/week';
-      if (token === 'luxury') return '10-15 hrs/week';
-      return '6-8 hrs/week';
+      if (token === 'budget') return '3–5 hrs/week';
+      if (token === 'luxury') return '10–15 hrs/week';
+      return '6–8 hrs/week';
     }
-
+  
+    function escapeHtml(str) {
+      return String(str || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  
+    // ----------------------------
+    // 🔹 NEW: Split markdown into sections
+    // ----------------------------
+    function splitSections(md) {
+      if (!md) return [];
+  
+      const parts = md.split(/\n##\s+/g);
+      const sections = [];
+  
+      parts.forEach((part, idx) => {
+        if (!part.trim()) return;
+  
+        if (idx === 0 && !part.startsWith('#')) {
+          sections.push({
+            title: 'Overview',
+            content: part.trim()
+          });
+        } else {
+          const lines = part.split('\n');
+          const title = lines.shift().replace(/^#+\s*/, '').trim();
+          const content = lines.join('\n').trim();
+          sections.push({ title, content });
+        }
+      });
+  
+      return sections;
+    }
+  
+    // ----------------------------
+    // Submit
+    // ----------------------------
     async function submitToBackend(e) {
       e.preventDefault();
-
+  
       const target = (document.getElementById('destination').value || '').trim();
       const weeksNum = Math.max(1, Math.min(26, parseInt(document.getElementById('duration').value || '0', 10)));
       const duration = mapWeeksToDurationString(weeksNum);
-
+  
       const weeklyHoursToken = document.getElementById('budgetValue').value || 'moderate';
       const weeklyHours = mapWeeklyHoursToBudgetToken(weeklyHoursToken);
-
+  
       const strengths = (document.getElementById('interests').value || '').trim();
-
+  
       if (!target || !weeksNum) {
         alert('Please enter a target and time horizon.');
         return;
       }
-
+  
       placeholderCard.classList.add('hidden');
       results.classList.remove('hidden');
       results.innerHTML = `
@@ -361,13 +408,8 @@
         </div>
       `;
       renderIcons();
-
+  
       try {
-        // IMPORTANT: Keep request keys unchanged for now to avoid backend edits.
-        // destination -> target skill/role
-        // duration -> weeks
-        // budget -> weekly hours
-        // interests -> current strengths/context
         const resp = await fetch('/plan-trip', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -378,40 +420,28 @@
             interests: strengths
           })
         });
-
+  
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
-        const md = (data && data.result) ? data.result : 'No result';
-
-        const content = (window.marked && window.marked.parse)
-          ? window.marked.parse(md)
-          : `<pre class="whitespace-pre-wrap">${md}</pre>`;
-
+        const md = (data && data.result) ? data.result : '';
+  
+        const sections = splitSections(md);
+  
         results.innerHTML = `
-          <div class="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 class="text-xl font-semibold tracking-tight">Your Learning Plan</h3>
-                <p class="text-sm text-neutral-600">
-                  Target: <span class="font-medium text-neutral-800">${escapeHtml(target)}</span>
-                  <span class="mx-2 text-neutral-300">•</span>
-                  Horizon: <span class="font-medium text-neutral-800">${escapeHtml(duration)}</span>
-                  <span class="mx-2 text-neutral-300">•</span>
-                  Time: <span class="font-medium text-neutral-800">${escapeHtml(weeklyHours)}</span>
-                </p>
+          <div class="space-y-4">
+            ${sections.map(sec => `
+              <div class="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+                <h3 class="text-lg font-semibold tracking-tight mb-3">
+                  ${escapeHtml(sec.title)}
+                </h3>
+                <div class="prose max-w-none">
+                  ${window.marked ? marked.parse(sec.content) : `<pre>${escapeHtml(sec.content)}</pre>`}
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <button id="printBtn" class="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm hover:bg-neutral-50">
-                  <i data-lucide="printer" class="h-4 w-4"></i> Print / PDF
-                </button>
-              </div>
-            </div>
-            <div class="prose max-w-none">${content}</div>
+            `).join('')}
           </div>
         `;
         renderIcons();
-        const printBtn = document.getElementById('printBtn');
-        printBtn?.addEventListener('click', () => window.print());
       } catch (err) {
         results.innerHTML = `
           <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700">
@@ -422,19 +452,10 @@
           </div>
         `;
         renderIcons();
-        console.error('Plan error:', err);
+        console.error(err);
       }
     }
-
-    function escapeHtml(str) {
-      return String(str || '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-
+  
     form.addEventListener('submit', submitToBackend);
   </script>
 </body>

@@ -72,19 +72,57 @@ class TripResponse(BaseModel):
     result: str
     tool_calls: List[Dict[str, Any]] = []
 
-
 def _init_llm():
     # Simple, test-friendly LLM init
     class _Fake:
         def __init__(self):
             pass
+
         def bind_tools(self, tools):
             return self
+
         def invoke(self, messages):
             class _Msg:
-                content = "Test itinerary"
+                content = (
+                    "## 1. Skill Gap Analysis\n"
+                    "- Target capability: Senior AI Product Manager operating at L5/L6 level.\n"
+                    "- Key gaps: model intuition, evaluation frameworks, AI-first product design, technical depth.\n\n"
+                    "## 2. Cornerstone Project\n"
+                    "- Build an AI-powered L&D agent that diagnoses skill gaps and generates execution plans.\n"
+                    "- Demonstrates product thinking, agent design, prompt architecture, and execution.\n\n"
+                    "## 3. Learning Plan\n"
+                    "- Phase 1: Foundations and gap validation.\n"
+                    "- Phase 2: Build and iterate on the agent.\n"
+                    "- Phase 3: Polish, evaluate, and document outcomes.\n\n"
+                    "## 4. Execution Plan\n"
+                    "- Week 1: Define scope, success metrics, and baseline prototype.\n"
+                    "- Week 2: Implement agents and prompts.\n"
+                    "- Week 3: Add evaluation, polish UX, document learnings.\n"
+                )
                 tool_calls: List[Dict[str, Any]] = []
+
             return _Msg()
+
+    if os.getenv("TEST_MODE"):
+        return _Fake()
+
+    if os.getenv("OPENAI_API_KEY"):
+        return ChatOpenAI(
+            model="gpt-3.5-turbo",
+            temperature=0.7,
+            max_tokens=1500,
+        )
+
+    elif os.getenv("OPENROUTER_API_KEY"):
+        return ChatOpenAI(
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url="https://openrouter.ai/api/v1",
+            model=os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini"),
+            temperature=0.7,
+        )
+
+    else:
+        raise ValueError("Please set OPENAI_API_KEY or OPENROUTER_API_KEY in your .env")
 
     if os.getenv("TEST_MODE"):
         return _Fake()
@@ -524,15 +562,27 @@ def research_agent(state: TripState) -> TripState:
     req = state["trip_request"]
     destination = req["destination"]
     prompt_t = (
-        "You are a research assistant.\n"
-        "Gather essential information about {destination}.\n"
-        "Use tools to get weather, visa, and essential info, then summarize."
+         "You are a Learning & Development gap analyst.\n"
+    "Target skill/role: {destination}\n"
+    "Time horizon: {duration}\n"
+    "Weekly hours available: {budget}\n"
+    "Current strengths/background: {interests}\n\n"
+    "Task:\n"
+    "Identify the most important skill gaps the user must close to reach the target.\n"
+    "Prioritize ruthlessly and be opinionated.\n"
+    "Output format:\n"
+    "1) Target capability in 2 lines\n"
+    "2) Top 5 skill gaps (bullets)\n"
+    "3) Why each gap matters (1 line each)\n"
     )
-    vars_ = {"destination": destination}
+    vars_ = {"destination": destination,
+    "duration": req.get("duration", ""),
+    "budget": req.get("budget", ""),
+    "interests": req.get("interests", ""),}
     
     messages = [SystemMessage(content=prompt_t.format(**vars_))]
-    tools = [essential_info, weather_brief, visa_brief]
-    agent = llm.bind_tools(tools)
+    tools = []
+    agent = llm
     
     calls: List[Dict[str, Any]] = []
     tool_results = []
@@ -580,15 +630,27 @@ def budget_agent(state: TripState) -> TripState:
     destination, duration = req["destination"], req["duration"]
     budget = req.get("budget", "moderate")
     prompt_t = (
-        "You are a budget analyst.\n"
-        "Analyze costs for {destination} over {duration} with budget: {budget}.\n"
-        "Use tools to get pricing information, then provide a detailed breakdown."
+       "You are a Learning Plan Designer.\n"
+    "Target skill/role: {destination}\n"
+    "Time horizon: {duration}\n"
+    "Weekly hours available: {budget}\n"
+    "Current strengths/background: {interests}\n\n"
+    "Task:\n"
+    "Create a phase-based learning plan aligned to the time horizon.\n"
+    "Focus on learning-by-building, not passive consumption.\n"
+    "Output format:\n"
+    "1) Phases (with dates/weeks)\n"
+    "2) For each phase: themes, what to build, and expected outputs\n"
+    "3) A short list of resource TYPES (docs, courses, repos) not specific links\n"
     )
-    vars_ = {"destination": destination, "duration": duration, "budget": budget}
+    vars_ = {"destination": destination,
+    "duration": duration,
+    "budget": budget,
+    "interests": req.get("interests", "")}
     
     messages = [SystemMessage(content=prompt_t.format(**vars_))]
-    tools = [budget_basics, attraction_prices]
-    agent = llm.bind_tools(tools)
+    tools = []
+    agent = llm
     
     calls: List[Dict[str, Any]] = []
     
@@ -650,9 +712,19 @@ def local_agent(state: TripState) -> TripState:
     context_text = "\n".join(context_lines) if context_lines else ""
     
     prompt_t = (
-        "You are a local guide.\n"
-        "Find authentic experiences in {destination} for someone interested in: {interests}.\n"
-        "Travel style: {travel_style}. Use tools to gather local insights.\n"
+       "You are a Cornerstone Project Architect.\n"
+    "Target skill/role: {destination}\n"
+    "Time horizon: {duration}\n"
+    "Weekly hours available: {budget}\n"
+    "Current strengths/background: {interests}\n\n"
+    "Task:\n"
+    "Propose ONE portfolio-worthy cornerstone project that proves the target capability end-to-end.\n"
+    "Output format:\n"
+    "1) Project name\n"
+    "2) Goal (2 lines)\n"
+    "3) What you will build/ship (bullets)\n"
+    "4) Skills demonstrated (bullets)\n"
+    "5) What 'good' looks like (bullets)\n"
     )
     
     # Add retrieved context to prompt if available
@@ -660,15 +732,15 @@ def local_agent(state: TripState) -> TripState:
         prompt_t += "\nRelevant curated experiences from our database:\n{context}\n"
     
     vars_ = {
-        "destination": destination,
-        "interests": interests,
-        "travel_style": travel_style,
-        "context": context_text if context_text else "No curated context available.",
+       "destination": destination,
+    "duration": req.get("duration", ""),
+    "budget": req.get("budget", ""),
+    "interests": interests,
     }
     
     messages = [SystemMessage(content=prompt_t.format(**vars_))]
-    tools = [local_flavor, local_customs, hidden_gems]
-    agent = llm.bind_tools(tools)
+    tools = []
+    agent = llm
     
     calls: List[Dict[str, Any]] = []
     
@@ -714,47 +786,70 @@ def itinerary_agent(state: TripState) -> TripState:
     req = state["trip_request"]
     destination = req["destination"]
     duration = req["duration"]
-    travel_style = req.get("travel_style", "standard")
+
+    # We keep these fields (even if UI doesn't use them) for compatibility
     user_input = (req.get("user_input") or "").strip()
-    
-    prompt_parts = [
-        "Create a {duration} itinerary for {destination} ({travel_style}).",
-        "",
-        "Inputs:",
-        "Research: {research}",
-        "Budget: {budget}",
-        "Local: {local}",
-    ]
-    if user_input:
-        prompt_parts.append("User input: {user_input}")
-    
-    prompt_t = "\n".join(prompt_parts)
+
+    prompt_t = (
+        "You are an expert Learning & Development architect and career coach.\n\n"
+        "User inputs:\n"
+        "- Target skill/role: {destination}\n"
+        "- Time horizon: {duration}\n"
+        "- Weekly hours available: {budget}\n"
+        "- Current strengths/background: {interests}\n\n"
+        "Drafts from specialist agents:\n"
+        "SKILL GAPS (from gap analyst):\n{research}\n\n"
+        "CORNERSTONE PROJECT (from project architect):\n{local}\n\n"
+        "LEARNING PLAN (from learning plan designer):\n{budget_block}\n\n"
+        "If the user provided extra notes, incorporate them:\n{user_input}\n\n"
+        "Now produce the final response in this exact markdown structure:\n\n"
+        "## 1. Skill Gap Analysis\n"
+        "- Briefly describe the target capability.\n"
+        "- List the most critical skill gaps (prioritized).\n"
+        "- 1 line on why each gap matters.\n\n"
+        "## 2. Cornerstone Project\n"
+        "- Propose ONE project.\n"
+        "- Include: goal, what you will build/ship, skills demonstrated, what 'good' looks like.\n\n"
+        "## 3. Learning Plan\n"
+        "- Break into phases aligned to the time horizon.\n"
+        "- For each phase: themes, what to build, expected outputs.\n"
+        "- Suggest resource TYPES (docs, courses, repos), not links.\n\n"
+        "## 4. Execution Plan\n"
+        "- Week-by-week action list.\n"
+        "- Concrete outputs each week.\n"
+        "- Checkpoints and success criteria at the end.\n\n"
+        "Rules:\n"
+        "- Be concise but specific.\n"
+        "- Avoid motivational fluff.\n"
+        "- Optimize for demonstrable outcomes.\n"
+    )
+
     vars_ = {
-        "duration": duration,
         "destination": destination,
-        "travel_style": travel_style,
-        "research": (state.get("research") or "")[:400],
-        "budget": (state.get("budget") or "")[:400],
-        "local": (state.get("local") or "")[:400],
-        "user_input": user_input,
+        "duration": duration,
+        "budget": req.get("budget", "") or "",
+        "interests": req.get("interests", "") or "",
+        "research": (state.get("research") or ""),
+        "local": (state.get("local") or ""),
+        "budget_block": (state.get("budget") or ""),
+        "user_input": user_input if user_input else "(none)",
     }
-    
+
     # Add span attributes for better observability in Arize
-    # NOTE: using_attributes must be OUTER context for proper propagation
-    with using_attributes(tags=["itinerary", "final_agent"]):
+    with using_attributes(tags=["learning_plan", "final_agent"]):
         if _TRACING:
             current_span = trace.get_current_span()
             if current_span:
-                current_span.set_attribute("metadata.itinerary", "true")
-                current_span.set_attribute("metadata.agent_type", "itinerary")
+                current_span.set_attribute("metadata.learning_plan", "true")
+                current_span.set_attribute("metadata.agent_type", "learning_plan")
                 current_span.set_attribute("metadata.agent_node", "itinerary_agent")
                 if user_input:
                     current_span.set_attribute("metadata.user_input", user_input)
-        
+
         # Prompt template wrapper for Arize Playground integration
         with using_prompt_template(template=prompt_t, variables=vars_, version="v1"):
             res = llm.invoke([SystemMessage(content=prompt_t.format(**vars_))])
-    
+
     return {"messages": [SystemMessage(content=res.content)], "final": res.content}
 
 
@@ -781,7 +876,7 @@ def build_graph():
     return g.compile()
 
 
-app = FastAPI(title="AI Trip Planner")
+app = FastAPI(title="AI L&D Planner")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -802,7 +897,7 @@ def serve_frontend():
 
 @app.get("/health")
 def health():
-    return {"status": "healthy", "service": "ai-trip-planner"}
+    return {"status": "healthy", "service": "ai-ld-planner"}
 
 
 # Initialize tracing once at startup, not per request
