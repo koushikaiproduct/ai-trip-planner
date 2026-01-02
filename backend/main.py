@@ -103,42 +103,41 @@ def _init_llm():
 
             return _Msg()
 
-    if os.getenv("TEST_MODE"):
+    # Explicit test mode toggle
+    if os.getenv("TEST_MODE") in {"1", "true", "TRUE", "yes", "YES"}:
+        print("✅ Using Fake LLM (TEST_MODE)")
         return _Fake()
 
-    if os.getenv("OPENAI_API_KEY"):
+    # Prefer OpenRouter if configured
+    openrouter_key = os.getenv("OPENROUTER_API_KEY")
+    if openrouter_key:
+        print("✅ Using OpenRouter LLM")
         return ChatOpenAI(
+            api_key=openrouter_key,
+            base_url="https://openrouter.ai/api/v1",
+            model=os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini"),
+            temperature=0.7,
+            max_tokens=1500,
+            default_headers={
+                # Force auth header in case the client ignores openai_api_key (seen in some combos)
+                "Authorization": f"Bearer {openrouter_key}",
+                "HTTP-Referer": "http://localhost:8000",
+                "X-Title": "ai-trip-planner",
+            }
+        )
+
+    # Fallback to OpenAI if configured
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key:
+        print("✅ Using OpenAI LLM")
+        return ChatOpenAI(
+            api_key=openai_key,
             model="gpt-3.5-turbo",
             temperature=0.7,
             max_tokens=1500,
         )
 
-    elif os.getenv("OPENROUTER_API_KEY"):
-        return ChatOpenAI(
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url="https://openrouter.ai/api/v1",
-            model=os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini"),
-            temperature=0.7,
-        )
-
-    else:
-        raise ValueError("Please set OPENAI_API_KEY or OPENROUTER_API_KEY in your .env")
-
-    if os.getenv("TEST_MODE"):
-        return _Fake()
-    if os.getenv("OPENAI_API_KEY"):
-        return ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, max_tokens=1500)
-    elif os.getenv("OPENROUTER_API_KEY"):
-        # Use OpenRouter via OpenAI-compatible client
-        return ChatOpenAI(
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url="https://openrouter.ai/api/v1",
-            model=os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini"),
-            temperature=0.7,
-        )
-    else:
-        # Require a key unless running tests
-        raise ValueError("Please set OPENAI_API_KEY or OPENROUTER_API_KEY in your .env")
+    raise ValueError("Please set OPENROUTER_API_KEY (recommended) or OPENAI_API_KEY in your .env")
 
 
 llm = _init_llm()
