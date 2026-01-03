@@ -557,7 +557,7 @@ class TripState(TypedDict):
     tool_calls: Annotated[List[Dict[str, Any]], operator.add]
 
 
-def research_agent(state: TripState) -> TripState:
+def capability_research_agent(state: TripState) -> TripState:
     req = state["trip_request"]
     destination = req["destination"]
     prompt_t = (
@@ -591,8 +591,8 @@ def research_agent(state: TripState) -> TripState:
         if _TRACING:
             current_span = trace.get_current_span()
             if current_span:
-                current_span.set_attribute("metadata.agent_type", "research")
-                current_span.set_attribute("metadata.agent_node", "research_agent")
+                current_span.set_attribute("metadata.agent_type", "capability_research")
+                current_span.set_attribute("metadata.agent_node", "capability_research_agent")
         
         with using_prompt_template(template=prompt_t, variables=vars_, version="v1"):
             res = agent.invoke(messages)
@@ -624,7 +624,7 @@ def research_agent(state: TripState) -> TripState:
     return {"messages": [SystemMessage(content=out)], "research": out, "tool_calls": calls}
 
 
-def budget_agent(state: TripState) -> TripState:
+def effort_constraints_agent(state: TripState) -> TripState:
     req = state["trip_request"]
     destination, duration = req["destination"], req["duration"]
     budget = req.get("budget", "moderate")
@@ -658,8 +658,8 @@ def budget_agent(state: TripState) -> TripState:
         if _TRACING:
             current_span = trace.get_current_span()
             if current_span:
-                current_span.set_attribute("metadata.agent_type", "budget")
-                current_span.set_attribute("metadata.agent_node", "budget_agent")
+                current_span.set_attribute("metadata.agent_type", "effort_constraints")
+                current_span.set_attribute("metadata.agent_node", "effort_constraints_agent")
         
         with using_prompt_template(template=prompt_t, variables=vars_, version="v1"):
             res = agent.invoke(messages)
@@ -689,7 +689,7 @@ def budget_agent(state: TripState) -> TripState:
     return {"messages": [SystemMessage(content=out)], "budget": out, "tool_calls": calls}
 
 
-def local_agent(state: TripState) -> TripState:
+def contextualization_agent(state: TripState) -> TripState:
     req = state["trip_request"]
     destination = req["destination"]
     interests = req.get("interests", "local culture")
@@ -748,8 +748,8 @@ def local_agent(state: TripState) -> TripState:
         if _TRACING:
             current_span = trace.get_current_span()
             if current_span:
-                current_span.set_attribute("metadata.agent_type", "local")
-                current_span.set_attribute("metadata.agent_node", "local_agent")
+                current_span.set_attribute("metadata.agent_type", "contextualization")
+                current_span.set_attribute("metadata.agent_node", "contextualization_agent")
                 if ENABLE_RAG and context_text:
                     current_span.set_attribute("metadata.rag_enabled", "true")
         
@@ -781,7 +781,7 @@ def local_agent(state: TripState) -> TripState:
     return {"messages": [SystemMessage(content=out)], "local": out, "tool_calls": calls}
 
 
-def itinerary_agent(state: TripState) -> TripState:
+def learning_plan_synthesis_agent(state: TripState) -> TripState:
     req = state["trip_request"]
     destination = req["destination"]
     duration = req["duration"]
@@ -840,8 +840,8 @@ def itinerary_agent(state: TripState) -> TripState:
             current_span = trace.get_current_span()
             if current_span:
                 current_span.set_attribute("metadata.learning_plan", "true")
-                current_span.set_attribute("metadata.agent_type", "learning_plan")
-                current_span.set_attribute("metadata.agent_node", "itinerary_agent")
+                current_span.set_attribute("metadata.agent_type", "learning_plan_synthesis")
+                current_span.set_attribute("metadata.agent_node", "learning_plan_synthesis_agent")
                 if user_input:
                     current_span.set_attribute("metadata.user_input", user_input)
 
@@ -854,24 +854,27 @@ def itinerary_agent(state: TripState) -> TripState:
 
 def build_graph():
     g = StateGraph(TripState)
-    g.add_node("research_node", research_agent)
-    g.add_node("budget_node", budget_agent)
-    g.add_node("local_node", local_agent)
-    g.add_node("itinerary_node", itinerary_agent)
 
-    # Run research, budget, and local agents in parallel
-    g.add_edge(START, "research_node")
-    g.add_edge(START, "budget_node")
-    g.add_edge(START, "local_node")
-    
-    # All three agents feed into the itinerary agent
-    g.add_edge("research_node", "itinerary_node")
-    g.add_edge("budget_node", "itinerary_node")
-    g.add_edge("local_node", "itinerary_node")
-    
-    g.add_edge("itinerary_node", END)
+    # Register agents (learning & capability planning domain)
+    g.add_node("capability_research_node", capability_research_agent)
+    g.add_node("effort_constraints_node", effort_constraints_agent)
+    g.add_node("contextualization_node", contextualization_agent)
+    g.add_node("learning_plan_node", learning_plan_synthesis_agent)
 
-    # Compile without checkpointer to avoid state persistence issues
+    # Run the first three agents in parallel
+    g.add_edge(START, "capability_research_node")
+    g.add_edge(START, "effort_constraints_node")
+    g.add_edge(START, "contextualization_node")
+
+    # All agents feed into the final synthesis agent
+    g.add_edge("capability_research_node", "learning_plan_node")
+    g.add_edge("effort_constraints_node", "learning_plan_node")
+    g.add_edge("contextualization_node", "learning_plan_node")
+
+    # Final output
+    g.add_edge("learning_plan_node", END)
+
+    # Compile without a checkpointer (stateless execution)
     return g.compile()
 
 
