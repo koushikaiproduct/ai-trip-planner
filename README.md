@@ -46,41 +46,45 @@ v0.1 optimizes for architectural clarity, not completeness.
 
 --------------------------------------------------
 
-High-Level Architecture
+## High-Level Architecture
 
-┌─────────────────────────────────────────────────────────────────┐
-│                         User Request                             │
-│           (learning goal, time horizon, weekly effort)           │
-└────────────────────────────────┬────────────────────────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │   FastAPI Endpoint       │
-                    │   /plan-trip             │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │   LangGraph Workflow     │
-                    │   (Parallel Agents)      │
-                    └────────────┬────────────┘
-                                 │
-        ┌────────────────────────┼────────────────────────┐
-        │                        │                        │
-┌───────▼────────┐     ┌─────────▼────────┐     ┌────────▼─────────┐
-│ Skill Mapping  │     │ Constraints       │     │ Personalization   │
-│ Agent          │     │ Agent             │     │ Agent             │
-│ (What to learn)│     │ (Effort & scope)  │     │ (User context)    │
-└───────┬────────┘     └─────────┬────────┘     └────────┬─────────┘
-        │                        │                        │
-        └────────────────────────┼────────────────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │ Plan Synthesis Agent     │
-                    │ (Sequencing & narrative) │
-                    └────────────┬────────────┘
-                                 │
-                    ┌────────────▼────────────┐
-                    │   Final Learning Plan   │
-                    └─────────────────────────┘
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│                            User Request                             │
+│        (learning goal, time horizon, weekly effort, background)      │
+└───────────────────────────────────┬─────────────────────────────────┘
+                                    │
+                         ┌──────────▼──────────┐
+                         │   FastAPI Endpoint  │
+                         │      /plan-trip     │
+                         └──────────┬──────────┘
+                                    │
+                         ┌──────────▼──────────┐
+                         │   LangGraph Workflow│
+                         │ (Agent Orchestration)│
+                         └──────────┬──────────┘
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        │                           │                           │
+┌───────▼────────┐        ┌─────────▼─────────┐       ┌─────────▼─────────┐
+│ Skill Mapping   │        │ Constraints Agent │       │ Context Agent     │
+│ Agent           │        │ (Effort & Scope)  │       │ (User Background) │
+│ (What to learn) │        │                   │       │                   │
+└───────┬────────┘        └─────────┬─────────┘       └─────────┬─────────┘
+        │                           │                           │
+        └───────────────┬───────────┴───────────┬───────────────┘
+                        │
+              ┌─────────▼─────────┐
+              │ Plan Synthesis    │
+              │ Agent             │
+              │ (Sequencing &     │
+              │ Narrative)        │
+              └─────────┬─────────┘
+                        │
+             ┌──────────▼──────────┐
+             │ Final Learning Plan │
+             │ (Structured Output) │
+             └─────────────────────┘
 
 All orchestration logic lives in backend/main.py.
 
