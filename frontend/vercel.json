@@ -1,0 +1,6 @@
+{
+    "rewrites": [
+      { "source": "/plan-trip", "destination": "https://ai-ld-planner-backend.onrender.com/plan-trip" },
+      { "source": "/health", "destination": "https://ai-ld-planner-backend.onrender.com/health" }
+    ]
+  }
