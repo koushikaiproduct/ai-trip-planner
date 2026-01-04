@@ -881,7 +881,12 @@ def build_graph():
 app = FastAPI(title="AI L&D Planner")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://learn.koushik.work",
+        "https://ai-ld-planner-backend.onrender.com",
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
